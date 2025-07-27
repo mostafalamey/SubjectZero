@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SubjectZero Maze Prototype</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous">
     </head>
     <body>
         <div id="app">
@@ -15,6 +16,7 @@
         <script src="supabase.js"></script>
         <script src="sidebar.js"></script>
         <script src="characters.js"></script>
+        <script src="message-modal.js"></script>
         <script src="artifacts.js"></script>
         <script src="maze-editor.js"></script>
         <script>
@@ -31,7 +33,9 @@
             };
             // Initial render
             window.renderSidebar(document.getElementById('sidebar'));
-            window.showView('maze');
+            // Simple router: show last selected tab or Maze Editor by default
+            let lastTab = localStorage.getItem('sz-selected-tab') || 'maze';
+            window.showView(lastTab);
         </script>
     </body>
 </html>

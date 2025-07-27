@@ -8,21 +8,18 @@ window.renderSidebar = function(container) {
     </div>
   `;
     // make the maze editor the default active tab
-    document.getElementById('tab-maze').classList.add('active');
+  // Determine which tab to activate (default: maze)
+  let lastTab = localStorage.getItem('sz-selected-tab') || 'maze';
+  document.getElementById('tab-' + lastTab).classList.add('active');
 
-    document.getElementById('tab-characters').onclick = () => {
-        window.showView('characters');
-        document.querySelectorAll('.sidebar-tab').forEach(btn => btn.classList.remove('active'));
-        document.getElementById('tab-characters').classList.add('active');
-    }
-    document.getElementById('tab-artifacts').onclick = () => {
-        window.showView('artifacts');
-        document.querySelectorAll('.sidebar-tab').forEach(btn => btn.classList.remove('active'));
-        document.getElementById('tab-artifacts').classList.add('active');
-    }
-    document.getElementById('tab-maze').onclick = () => {
-        window.showView('maze');
-        document.querySelectorAll('.sidebar-tab').forEach(btn => btn.classList.remove('active'));
-        document.getElementById('tab-maze').classList.add('active');
-    }
+  function activateTab(tab) {
+    window.showView(tab);
+    document.querySelectorAll('.sidebar-tab').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    localStorage.setItem('sz-selected-tab', tab);
+  }
+
+  document.getElementById('tab-characters').onclick = () => activateTab('characters');
+  document.getElementById('tab-artifacts').onclick = () => activateTab('artifacts');
+  document.getElementById('tab-maze').onclick = () => activateTab('maze');
 };

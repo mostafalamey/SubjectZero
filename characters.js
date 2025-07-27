@@ -71,8 +71,12 @@ window.renderCharacters = function(container) {
         `<td>${escapeHTML(c.story)}</td>`+
         `<td>${escapeHTML(c.notes)}</td>`+
         `<td style="white-space:nowrap;">
-          <button class="editCharBtn" data-idx="${i}">Edit</button>
-          <button class="deleteCharBtn" data-idx="${i}">Delete</button>
+          <button class="editCharBtn" data-idx="${i}" title="Edit">
+            <i class="fa fa-pencil-alt" aria-hidden="true"></i>
+          </button>
+          <button class="deleteCharBtn" data-idx="${i}" title="Delete">
+            <i class="fa fa-trash" aria-hidden="true" style="color:#e57373;"></i>
+          </button>
         </td>`;
       tbody.appendChild(tr);
     });
@@ -83,10 +87,72 @@ window.renderCharacters = function(container) {
     Array.from(container.querySelectorAll('.deleteCharBtn')).forEach(btn => {
       btn.onclick = function() {
         const idx = parseInt(btn.getAttribute('data-idx'), 10);
-        if (confirm('Delete this character?')) {
-          window.characterList.splice(idx, 1);
-          renderTable();
-        }
+        const char = window.characterList[idx];
+        window.showMessageModal('Are you sure you want to delete this character?', {
+          confirm: true,
+          onConfirm: async function() {
+            try {
+              if (char && char.id) {
+                // Check if character is referenced in any room
+                const { data: usedRooms, error: roomError } = await window.supabase
+                  .from('rooms')
+                  .select('id')
+                  .eq('character_id', char.id);
+                if (roomError) {
+                  window.showMessageModal('Error checking rooms: ' + roomError.message);
+                  return;
+                }
+                if (Array.isArray(usedRooms) && usedRooms.length > 0) {
+                  window.showMessageModal(
+                    'Cannot delete: This character is used in one or more rooms.',
+                    {
+                      // Custom button: Unlink and Delete
+                      customButtons: [
+                        {
+                          label: 'Unlink from all rooms and Delete',
+                          async onClick() {
+                            try {
+                              // Unlink character from all rooms
+                              const { error: unlinkError } = await window.supabase
+                                .from('rooms')
+                                .update({ character_id: null })
+                                .eq('character_id', char.id);
+                              if (unlinkError) {
+                                window.showMessageModal('Error unlinking character from rooms: ' + unlinkError.message);
+                                return;
+                              }
+                              // Now delete the character
+                              const { error: delError } = await window.supabase.from('characters').delete().eq('id', char.id);
+                              if (delError) {
+                                window.showMessageModal('Error deleting character: ' + delError.message);
+                                return;
+                              }
+                              window.characterList.splice(idx, 1);
+                              renderTable();
+                            } catch (err) {
+                              window.showMessageModal('Unexpected error: ' + err);
+                            }
+                          }
+                        }
+                      ],
+                      onClose: function() {}
+                    }
+                  );
+                  return;
+                }
+                const { error } = await window.supabase.from('characters').delete().eq('id', char.id);
+                if (error) {
+                  window.showMessageModal('Error deleting character: ' + error.message);
+                  return;
+                }
+              }
+              window.characterList.splice(idx, 1);
+              renderTable();
+            } catch (err) {
+              window.showMessageModal('Unexpected error: ' + err);
+            }
+          }
+        });
       };
     });
   }

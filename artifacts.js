@@ -58,8 +58,12 @@ window.renderArtifacts = function(container) {
         `<td>${escapeHTML(a.memory)}</td>`+
         `<td>${escapeHTML(a.notes)}</td>`+
         `<td style="white-space:nowrap;">
-          <button class="editArtifactBtn" data-idx="${i}">Edit</button>
-          <button class="deleteArtifactBtn" data-idx="${i}">Delete</button>
+          <button class="editArtifactBtn" data-idx="${i}" title="Edit">
+            <i class="fa fa-pencil-alt" aria-hidden="true"></i>
+          </button>
+          <button class="deleteArtifactBtn" data-idx="${i}" title="Delete">
+            <i class="fa fa-trash" aria-hidden="true" style="color:#e57373;"></i>
+          </button>
         </td>`;
       tbody.appendChild(tr);
     });
@@ -74,19 +78,70 @@ window.renderArtifacts = function(container) {
       btn.onclick = async function() {
         const idx = parseInt(btn.getAttribute('data-idx'));
         const artifact = window.artifactList[idx];
-        if (confirm('Delete this artifact?')) {
-          try {
-            const { error } = await window.supabase.from('artifacts').delete().eq('id', artifact.id);
-            if (error) {
-              alert('Error deleting artifact: ' + error.message);
-              return;
+        window.showMessageModal('Are you sure you want to delete this artifact?', {
+          confirm: true,
+          onConfirm: async function() {
+            try {
+              if (artifact && artifact.id) {
+                // Check if artifact is referenced in any room
+                const { data: usedRooms, error: roomError } = await window.supabase
+                  .from('rooms')
+                  .select('id')
+                  .eq('artifact_id', artifact.id);
+                if (roomError) {
+                  window.showMessageModal('Error checking rooms: ' + roomError.message);
+                  return;
+                }
+                if (Array.isArray(usedRooms) && usedRooms.length > 0) {
+                  window.showMessageModal(
+                    'Cannot delete: This artifact is used in one or more rooms.',
+                    {
+                      customButtons: [
+                        {
+                          label: 'Unlink from all rooms and Delete',
+                          async onClick() {
+                            try {
+                              // Unlink artifact from all rooms
+                              const { error: unlinkError } = await window.supabase
+                                .from('rooms')
+                                .update({ artifact_id: null })
+                                .eq('artifact_id', artifact.id);
+                              if (unlinkError) {
+                                window.showMessageModal('Error unlinking artifact from rooms: ' + unlinkError.message);
+                                return;
+                              }
+                              // Now delete the artifact
+                              const { error: delError } = await window.supabase.from('artifacts').delete().eq('id', artifact.id);
+                              if (delError) {
+                                window.showMessageModal('Error deleting artifact: ' + delError.message);
+                                return;
+                              }
+                              window.artifactList.splice(idx, 1);
+                              renderTable();
+                            } catch (err) {
+                              window.showMessageModal('Unexpected error: ' + err);
+                            }
+                          }
+                        }
+                      ],
+                      onClose: function() {}
+                    }
+                  );
+                  return;
+                }
+                const { error } = await window.supabase.from('artifacts').delete().eq('id', artifact.id);
+                if (error) {
+                  window.showMessageModal('Error deleting artifact: ' + error.message);
+                  return;
+                }
+              }
+              window.artifactList.splice(idx, 1);
+              renderTable();
+            } catch (err) {
+              window.showMessageModal('Unexpected error: ' + err);
             }
-            window.artifactList.splice(idx, 1);
-            renderTable();
-          } catch (err) {
-            alert('Unexpected error: ' + err);
           }
-        }
+        });
       };
     });
   }

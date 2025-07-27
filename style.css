@@ -10,9 +10,9 @@
   margin-bottom: 24px;
 }
 .char-table th, .artifact-table th {
-  background: #20243a;
-  color: #bfc9e0;
-  font-weight: 600;
+  background: #3c4368;
+  color: #95a0bb;
+  font-weight: 800;
   padding: 12px 8px;
   text-align: left;
   border-bottom: 2px solid #2d3147;
@@ -27,8 +27,14 @@
 .char-table tr:last-child td, .artifact-table tr:last-child td {
   border-bottom: none;
 }
+.char-table tbody tr:nth-child(even), .artifact-table tbody tr:nth-child(even) {
+  background: #232846;
+}
+.char-table tbody tr:nth-child(odd), .artifact-table tbody tr:nth-child(odd) {
+  background: #20243a;
+}
 .char-table tbody tr:hover, .artifact-table tbody tr:hover {
-  background: #292e4a;
+  background: #292e4a !important;
   transition: background 0.15s;
 }
 .char-table td button, .artifact-table td button {
