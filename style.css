@@ -1,0 +1,326 @@
+/* Modern table styles for artifacts and characters lists */
+.char-table, .artifact-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #232846;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px #0002;
+  margin-bottom: 24px;
+}
+.char-table th, .artifact-table th {
+  background: #20243a;
+  color: #bfc9e0;
+  font-weight: 600;
+  padding: 12px 8px;
+  text-align: left;
+  border-bottom: 2px solid #2d3147;
+}
+.char-table td, .artifact-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #232846;
+  color: #e0e6f0;
+  font-size: 1em;
+  vertical-align: top;
+}
+.char-table tr:last-child td, .artifact-table tr:last-child td {
+  border-bottom: none;
+}
+.char-table tbody tr:hover, .artifact-table tbody tr:hover {
+  background: #292e4a;
+  transition: background 0.15s;
+}
+.char-table td button, .artifact-table td button {
+  background: #2d3147;
+  color: #e0e6f0;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 14px;
+  margin-left: 4px;
+  font-size: 0.98em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.char-table td button:hover, .artifact-table td button:hover {
+  background: #3a3f5c;
+}
+.char-table th:nth-child(1) { width: 90px; }
+.char-table th:nth-child(2) { width: 90px; }
+.char-table th:nth-child(3), .char-table th:nth-child(4), .char-table th:nth-child(5) { width: 280px; }
+.char-table th:last-child { width: 120px; }
+
+/* Artifacts table: Name, Description (wide), Memory, Notes, Actions */
+.artifact-table th:nth-child(1) { width: 90px; }
+.artifact-table th:nth-child(2) { width: 380px; }
+.artifact-table th:nth-child(3) { width: 380px; }
+.artifact-table th:nth-child(4) { width: 380px; }
+.artifact-table th:last-child { width: 120px; }
+
+.char-table td, .artifact-table td {
+  word-break: break-word;
+}
+
+/* Modal styles for character add/edit */
+.modal-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
+}
+.modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #232846;
+  color: #e0e6f0;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px #0008;
+  padding: 32px 28px 20px 28px;
+  min-width: 620px;
+  max-width: 90vw;
+  z-index: 1001;
+}
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 1.3em;
+  text-align: center;
+}
+.modal-content label {
+  display: block;
+  margin-bottom: 2px;
+}
+.modal-content input, .modal-content select, .modal-content textarea {
+  width: 100%;
+  margin-top: 2px;
+  margin-bottom: 6px;
+  background: #181c24;
+  color: #e0e6f0;
+  border: 1px solid #3a425c;
+  border-radius: 4px;
+  padding: 6px;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+.modal-content textarea {
+  min-height: 128px;
+  resize: vertical;
+}
+.modal-content button {
+  margin-left: 8px;
+  padding: 6px 18px;
+  background: #2d3147;
+  color: #e0e6f0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: bold;
+  transition: background 0.1s;
+}
+.modal-content button:hover {
+  background: #3a3f5c;
+}
+
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #181c24;
+    color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+h1 {
+    margin: 24px 0 8px 0;
+    font-size: 2rem;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+#main {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 100vw;
+    box-sizing: border-box;
+}
+
+#app {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+
+#sidebar {
+    width: 220px;
+    background: #20243a;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    border-right: 1px solid #232846;
+    min-width: 180px;
+    max-width: 260px;
+}
+
+.sidebar-header {
+    font-size: 1.5em;
+    font-weight: bold;
+    padding: 24px 0 16px 0;
+    text-align: center;
+    letter-spacing: 1px;
+    color: #bfc9e0;
+    border-bottom: 1px solid #232846;
+}
+
+.sidebar-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 8px;
+}
+
+.sidebar-tab {
+    background: none;
+    border: none;
+    color: #e0e6f0;
+    font-size: 1.1em;
+    padding: 16px 0;
+    text-align: left;
+    padding-left: 32px;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+}
+
+.sidebar-tab:hover {
+    background: #232846;
+    color: #fff;
+}
+
+.sidebar-tab.active {
+    background: #2d3147;
+    font-weight: bold;
+    color: #e0e6f0;
+}
+
+#mainview {
+    flex: 1;
+    overflow: hidden;
+    padding: 12px;
+}
+
+
+/* Maze editor styles (copied from original) */
+
+#maze {
+    display: grid;
+    grid-template-columns: repeat(16, 42px);
+    grid-template-rows: repeat(16, 42px);
+    gap: 8px;
+    background: #232846;
+    border-radius: 8px;
+    padding: 8px;
+    margin: 24px 0 16px 0;
+}
+
+#editor {
+    margin-top: 32px;
+    margin-left: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #232846;
+    padding: 16px;
+    border-radius: 8px;
+    min-width: 360px;
+    max-width: 420px;
+}
+
+.room {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: box-shadow 0.2s, border 0.2s;
+    border: 2px solid transparent;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.room.selected {
+    border: 2px solid #ffb300;
+    box-shadow: 0 0 8px #ffb30088;
+    z-index: 2;
+}
+
+.A { background: #00b894; color: #fff; } /* Starting Room */
+.N { background: #3a425c; color: #bfc9e0; } /* Neutral Room */
+.T { background: #c0392b; color: #fff; } /* Trap Room */
+.S { background: #2980b9; color: #fff; } /* Story Room */
+.E { background: #f39c12; color: #fff; } /* Encounter Room */
+.C { background: #27ae60; color: #fff; } /* Clue Room */
+.M { background: #8e44ad; color: #fff; } /* Memory Room */
+.P { background: #d35400; color: #fff; } /* Puzzle Room */
+.X { background: #f39c12; color: #fff; } /* Exit Room */
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+#roomId {
+    font-family: monospace;
+    font-size: 1.1em;
+}
+
+#roomType, #characterSelector, #artifactSelector, #roomDesc {
+    margin-top: 4px;
+    width: 100%;
+    height: 40px;
+    font-size: medium;
+    color: #e0e6f0;
+    background-color: #2d3147;
+}
+
+#roomDesc {
+    min-height: 360px;
+    max-width: 100%;
+    font-family: inherit;
+    font-size: 1em;
+    color: #e0e6f0;
+    background-color: #2d3147;
+}
+
+#saveBtn, #loadBtn {
+    margin-top: 8px;
+    padding: 6px 16px;
+    background: #5c3d39;
+    color: #e0e6f0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background 0.1s;
+}
+
+#saveBtn:hover, #loadBtn:hover {
+    background: #94615b;
+}
+
+.characters-view, .artifacts-view {
+    padding: 32px;
+}
