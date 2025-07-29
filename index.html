@@ -14,6 +14,7 @@
         </div>
         <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
         <script src="supabase.js"></script>
+        <script src="mindmap.js"></script>
         <script src="sidebar.js"></script>
         <script src="characters.js"></script>
         <script src="message-modal.js"></script>
@@ -22,14 +23,16 @@
         <script>
             // Simple router: show Maze Editor by default
             window.showView = function(view) {
-            document.getElementById('mainview').innerHTML = '';
-            if (view === 'characters') {
-                window.renderCharacters(document.getElementById('mainview'));
-            } else if (view === 'artifacts') {
-                window.renderArtifacts(document.getElementById('mainview'));
-            } else {
-                window.renderMazeEditor(document.getElementById('mainview'));
-            }
+                document.getElementById('mainview').innerHTML = '';
+                if (view === 'characters') {
+                    window.renderCharacters(document.getElementById('mainview'));
+                } else if (view === 'artifacts') {
+                    window.renderArtifacts(document.getElementById('mainview'));
+                } else if (view === 'mindmap') {
+                    window.renderMindMap(document.getElementById('mainview'));
+                } else {
+                    window.renderMazeEditor(document.getElementById('mainview'));
+                }
             };
             // Initial render
             window.renderSidebar(document.getElementById('sidebar'));
